@@ -1,0 +1,10 @@
+kubectl version
+kubectl get nodes
+kubectl get pods
+kubectl get svc
+kubectl describe pod pod_name
+kubectl apply -f file.yaml
+kubectl delete -f file.yaml
+kubectl logs pod_name
+kubectl exec -it pod_name -- bash
+kubectl scale deployment app --replicas=3
