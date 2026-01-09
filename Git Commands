@@ -1,0 +1,11 @@
+git clone <repo_url>
+git status
+git add .
+git commit -m "message"
+git push origin branch_name
+git pull origin branch_name
+git branch
+git checkout branch_name
+git checkout -b new_branch
+git merge branch_name
+git log --oneline
