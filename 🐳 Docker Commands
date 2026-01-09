@@ -1,0 +1,11 @@
+docker --version
+docker images
+docker ps
+docker ps -a
+docker build -t image_name .
+docker run -d -p 8080:80 image_name
+docker stop container_id
+docker rm container_id
+docker rmi image_id
+docker exec -it container_id bash
+docker logs container_id
