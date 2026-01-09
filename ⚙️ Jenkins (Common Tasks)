@@ -1,0 +1,8 @@
+# Start Jenkins
+systemctl start jenkins
+
+# Check Jenkins status
+systemctl status jenkins
+
+# Jenkins runs on
+http://localhost:8080
