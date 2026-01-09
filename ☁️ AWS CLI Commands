@@ -1,0 +1,7 @@
+aws configure
+aws s3 ls
+aws s3 mb s3://bucket-name
+aws s3 cp file.txt s3://bucket-name
+aws ec2 describe-instances
+aws ec2 start-instances --instance-ids i-123456
+aws ec2 stop-instances --instance-ids i-123456
