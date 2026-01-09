@@ -1,0 +1,15 @@
+pwd                 # Show current directory
+ls -la              # List files with details
+cd /path/to/dir     # Change directory
+mkdir dir_name      # Create directory
+rm -rf dir_name     # Remove directory
+cp src dest         # Copy files
+mv src dest         # Move/rename files
+cat file.txt        # View file content
+tail -f logfile     # Follow logs
+chmod 755 file.sh   # Change file permissions
+chown user:group file
+df -h               # Disk usage
+free -m             # Memory usage
+ps aux               # Running processes
+kill -9 PID         # Kill process
