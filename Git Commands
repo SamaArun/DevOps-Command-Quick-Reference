@@ -1,11 +1,380 @@
-git clone <repo_url>
+# 🚀 Git Commands Cheat Sheet
+
+A quick, clean, and beginner-friendly reference for commonly used **Git commands**, neatly organized for daily use.
+
+---
+
+## 🛠️ Install
+
+```bash
+git --version
+📌 Check the installed Git version.
+
+
+⚙️ Setup
+git config --global user.name "Your Name"
+👤 Set your Git username.
+
+git config --global user.email "you@email.com"
+📧 Set your Git email.
+
+git config --list
+📋 View all Git configurations.
+
+
+🔄 Basic Workflow
+git init
+📁 Initialize a new Git repository.
+
 git status
+🔍 Check the status of files.
+
+git add file.txt
+➕ Stage a single file.
+
 git add .
-git commit -m "message"
-git push origin branch_name
-git pull origin branch_name
-git branch
-git checkout branch_name
-git checkout -b new_branch
-git merge branch_name
+📦 Stage all changes.
+
+git commit -m "msg"
+💾 Commit staged changes.
+--------------------------------------------------------------------------------------------
+
+♻️ Undo Mistakes
+git restore file.txt
+🧹 Restore file to last committed state.
+
+git restore --staged file.txt
+↩️ Unstage file (keep changes).
+
+git reset --hard HEAD
+⚠️ Reset all changes (use carefully).
+
+git commit --amend
+✏️ Edit the last commit.
+
+
+🌿 Branching
+git branch branch-name
+🌱 Create a new branch.
+
+git switch branch-name
+🔀 Switch to another branch.
+
+git merge branch-name
+🔗 Merge branches.
+
+git branch -d branch-name
+🗑️ Delete a branch.
+
+
+🌍 Remote Repositories
+git clone URL
+📥 Copy a remote repository.
+
+git fetch
+⬇️ Download repository history.
+
+git pull
+🔄 Fetch and merge latest changes.
+
+git push
+⬆️ Upload commits to remote repository.
+------------------------------------------------------------------------------------------------
+
+🧰 Advanced Git
+git stash
+📦 Stash local changes.
+
+git stash list
+📜 View all stashes.
+
+git stash apply
+♻️ Restore the most recent stash.
+
+
+📚 Logs
+git log
+🕒 View full commit history.
+
 git log --oneline
+🧾 View compact history.
+
+git log --graph
+🌳 View branch history visually.
+
+
+## ♻️ Undo Mistakes in Git
+
+Safely discard changes, unstage files, reset commits, and fix mistakes in Git.
+
+---
+
+### 🗑️ Discard Changes in a File
+
+```bash
+git restore file.txt
+🧹 Discard local changes
+
+Throws away changes made to file.txt
+
+Reverts file to the last committed version
+
+📂 From: Working Directory
+📌 To: Last Commit Version
+
+
+↩️ Unstage File (Keep Changes)
+git restore --staged file.txt
+📤 Removes file.txt from the Staging Area
+✅ Keeps the changes in your working directory
+🔁 Reset Commits
+🟢 Soft Reset
+
+git reset --soft HEAD~1
+✔ Undo last commit
+✔ Keep changes staged
+
+🟡 Mixed Reset
+git reset --mixed HEAD~1
+✔ Undo last commit
+✔ Unstage changes (files remain modified)
+
+🔴 Hard Reset
+git reset --hard HEAD~1
+⚠️ Danger Zone
+
+❌ Deletes last commit
+
+❌ Deletes all changes permanently
+
+Use only when you are 100% sure
+
+✏️ Edit Last Commit
+git commit --amend
+📝 Modify the most recent commit:
+
+Change commit message
+
+Add missed files
+
+📌 Example:
+
+Initial commit
+
+Initial commit + README updated
+
+💡 Tip:
+git commit --amend is safer than reset when you just want to fix the last commit.
+
+
+-----------------------------------------------------------------------------------------------------------
+
+🔄 Basic Workflow in Git
+
+Git works in three stages:
+
+📂 Working Directory → 📥 Staging Area → 📦 Repository
+
+🚀 Start a New Repository
+git init
+
+
+🆕 Initializes a new Git repository
+
+Starts tracking the folder
+
+Creates a hidden .git directory
+
+🔍 Check File Status
+git status
+
+
+📋 Shows the current state of files
+
+Modified files
+
+Untracked files
+
+Staged files
+
+➕ Stage One File
+git add file.txt
+
+
+✅ Stages a single file
+
+file.txt is now ready to commit
+
+Use when adding only one file
+
+📦 Stage All Changes
+git add .
+
+
+✅ Stages all modified files
+
+Use when adding multiple changes
+
+💾 Commit Changes
+git commit -m "msg"
+
+
+📝 Saves staged changes
+
+Message explains what you changed
+
+Example: "Add login feature"
+--------------------------------------------------------------------------------------------
+🌿 Branching in Git
+
+Branches help you work on features or fixes without affecting main code.
+
+🌱 Create a Branch
+git branch branch-name
+
+
+🆕 Creates a new branch
+
+Common examples: feature, bugfix
+
+🔀 Switch Branch
+git switch branch-name
+
+
+➡️ Switch to another branch
+
+Starts tracking work on that branch
+
+🔗 Merge Branches
+git merge branch-name
+
+
+🔄 Combines changes into the current branch
+
+Usually merge feature → main
+
+🗑️ Delete a Branch
+git branch -d branch-name
+
+
+🧹 Removes branch after merging
+
+Keeps repo clean
+
+🌍 Remote Repository Commands
+📥 Clone Repository
+git clone URL
+
+
+⬇️ Downloads a repository from GitHub
+
+🔄 Fetch Changes
+git fetch
+
+
+📡 Downloads latest history
+
+Does not merge automatically
+
+🔃 Pull Changes
+git pull
+
+
+⬇️ Fetch + merge latest changes
+
+⬆️ Push Changes
+git push
+
+
+🚀 Uploads local commits to remote repository
+-----------------------------------------------------------------------
+
+## 🧰 Advanced Git Commands
+
+Powerful Git commands to manage temporary changes, inspect history, and recover lost work.
+
+---
+
+## 📦 Stash Changes
+
+Temporarily save your work without committing it.
+
+📂 Flow:
+**Working Directory → Stash → Later Retrieval**
+
+---
+
+### 📥 Save Changes
+
+```bash
+git stash
+📦 Stashes your current changes
+
+Temporarily saves modified files
+
+Cleans the working directory
+
+📜 View Stashes
+git stash list
+👀 Shows all saved stashes
+
+Each stash is stored like a snapshot
+
+♻️ Restore Stash
+bash
+Copy code
+git stash apply
+🔁 Reapplies the most recent stash
+✅ Keeps stash available after applying
+
+📚 View Logs
+Understand commit history and branch structure.
+
+🕒 Full Commit History
+git log
+📜 Shows all commits in detail
+
+Author
+
+Date
+
+Commit message
+
+🧾 Compact History
+
+
+git log --oneline
+🧠 Displays summarized commits
+
+One commit per line
+
+Easy to scan
+
+🌳 Visual Branch History
+git log --graph
+🌿 Displays branch structure visually
+
+Shows merges and branching paths
+
+⏳ Recovery Tool
+git reflog
+🛟 Git recovery lifesaver
+
+Tracks all actions (reset, checkout, rebase, cherry-pick)
+
+Helps recover lost commits
+
+📌 Example actions tracked:
+
+HEAD@{0}: commit
+
+HEAD@{1}: reset
+
+HEAD@{2}: cherry-pick
+
+HEAD@{3}: checkout
+
+💡 Tip:
+Use git reflog when you think “I lost my commit” — it’s almost always recoverable.
+
+
