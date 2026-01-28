@@ -13,3 +13,217 @@ df -h               # Disk usage
 free -m             # Memory usage
 ps aux               # Running processes
 kill -9 PID         # Kill process
+----------------------------------------------------------------------
+
+# DevOps & Linux Basics – Quick Notes
+
+## Core Concepts
+
+* **Server = Box = Node**
+* **Lock = Public key**
+* **Key = Private key**
+* **Key Pair** → Public key + Private key
+
+## Typical Cloud Flow (AWS example)
+
+1. Create **key pair**
+2. Create **firewall** (Security Group)
+3. Import **public key** into cloud account (or use existing key pair)
+4. Create **server (EC2)** and attach **public key**
+5. Attach **firewall** to server
+
+## Clients & Protocols
+
+* **Browser** → HTTP / HTTPS client
+* **Linux Server** → SSH server
+* **SSH clients**:
+
+  * Git Bash
+  * PuTTY / SuperPuTTY
+  * MobaXterm
+  * macOS Terminal
+  * Windows CMD / PowerShell
+
+> Git Bash = a Unix-like shell on Windows (commonly used as an SSH client)
+
+## SSH Essentials
+
+* Generate key:
+
+  ```bash
+  ssh-keygen -f <file-name>
+  ```
+
+  Example:
+
+  ```bash
+  ssh-keygen -f daws-84s
+  ```
+* Key format:
+
+  * Public key → `ssh-rsa <long-random-code>` (or newer `ssh-ed25519`)
+* Connect to server:
+
+  ```bash
+  ssh -i <private-key> ec2-user@<IP>
+  ```
+* Common inputs: **IP, SSH (port 22), user (ec2-user/ubuntu), private key**
+
+## Networking
+
+* **Region**: e.g., `us-east-1`
+* **0.0.0.0/0** → Open to all IPv4 addresses (use carefully)
+
+## OS & Linux Fundamentals
+
+* **Linux is a kernel**, not a full OS
+* **OS** helps users/apps interact with hardware
+* **Kernel** = heart/brain of the OS
+* **Kernel + UI/Userspace = OS**
+
+### Linux Distributions (examples)
+
+* Red Hat, Ubuntu, CentOS, Fedora, SUSE, Oracle Linux, Amazon Linux, Debian, Rocky Linux, AlmaLinux, Kali, Solaris
+
+> ~99.9% of Linux distros share common commands and behavior
+
+### Red Hat family (examples)
+
+* RHEL, Amazon Linux, CentOS, Fedora, Rocky Linux, AlmaLinux
+* **RHEL**: enterprise support (paid)
+
+## Command Structure
+
+```text
+command <options> <inputs>
+```
+
+## Filesystem Basics
+
+* Linux home (example): `/home/ec2-user`
+* Windows home (example): `C:\Users\arun`
+
+### Path differences
+
+* Windows: `C:\devops\devops`
+* Linux (WSL/Git Bash): `/c/devops/devops`
+
+### Case sensitivity
+
+* Windows: **not** case-sensitive (`Arun == arun`)
+* Linux: **case-sensitive** (`Arun != arun`)
+* Linux usernames: lowercase, no spaces
+
+## Common Commands
+
+* `pwd` → present working directory
+* `cd` → change directory
+* `cd ..` → one directory up
+* `ls` → list files/directories
+
+# Linux Basic Commands – Quick Notes
+
+## Users & Prompt Symbols
+
+* `$` → Normal user
+* `#` → Root / admin / super user
+* `/root` → Root user home directory
+
+## Directory Structure
+
+* `/` → Root directory (top of filesystem)
+
+## Command Syntax
+
+```
+command <options> <inputs>
+```
+
+## Listing Files (ls)
+
+* `ls -l` → Long listing format (alphabetical order)
+* `ls -lr` → Long listing format, reverse alphabetical order
+* `ls -lt` → Latest modified files on top
+* `ls -ltr` → Latest modified files at bottom
+* `ls -la` → All files including hidden files and folders
+
+## File Creation & Viewing
+
+* `touch <file-name>` → Creates an empty file
+
+### cat command
+
+* `cat > <file-name>` → Write content (Ctrl + D to save)
+
+  * Replaces previous content
+* `cat >> <file-name>` → Append content
+
+## Redirection
+
+* `>` → Output redirection (overwrite)
+* `>>` → Output redirection (append)
+
+## Directories
+
+* `mkdir <dir-name>` → Create directory
+* `rmdir <dir-name>` → Remove empty directory
+
+## File & Directory Deletion
+
+* `rm -f <file>` → Force delete file
+* `rm -rf <dir>` → Recursively and forcefully delete files & folders
+
+## CRUD Operations
+
+* **C**reate
+* **R**ead
+* **U**pdate
+* **D**elete
+
+## Copy & Move
+
+* `cp <source> <destination>` → Copy files/directories
+* `mv <source> <destination>` → Move (cut & paste) or rename
+
+## Downloading Files
+
+* `wget <URL>` → Download file
+* `curl <URL>` → Display content on screen
+
+Example URL:
+
+```
+https://raw.githubusercontent.com/devops/notes/refs/heads/main/revison.txt
+```
+
+## Pipes & Text Processing
+
+* `cat <file> | grep <word>` → Search word using pipe
+* `grep <word> <file>` → Search word directly
+
+### cut command
+
+```
+echo https://raw.githubusercontent.com/devops/notes/refs/heads/main/revison.txt | cut -d "/" -f1
+```
+
+### awk command
+
+```
+echo https://raw.githubusercontent.com/devops/notes/refs/heads/main/revison.txt | awk -F "/" '{print $1}'
+```
+
+## Log Files
+
+* `tail -f <log-file>` → Live monitoring of log files
+
+## Searching Files
+
+* `find <path> -name <file-name>` → Find files by name
+
+## Editors
+
+* `vim` → Visually Improved editor
+
+---
+
