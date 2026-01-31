@@ -226,4 +226,1735 @@ echo https://raw.githubusercontent.com/devops/notes/refs/heads/main/revison.txt 
 * `vim` → Visually Improved editor
 
 ---
+# Vim Editor & Linux User Administration – Quick Notes
+
+---
+
+## File Editing Basics
+
+### Using cat
+
+* `cat > <file-name>` → Create / overwrite file (Ctrl + D to save)
+* `cat >> <file-name>` → Append content to file
+
+### Using vim
+
+* `vim <file-name>` → Open or create file in vim editor
+
+---
+
+## Vim Modes
+
+Vim mainly works in **3 modes**:
+
+1. **Command Mode** (default – press `Esc`)
+2. **Insert Mode** (press `i` to insert text)
+3. **Last Line Mode** (press `:`)
+
+---
+
+## Last Line Mode Commands (`:`)
+
+* `:q` → Quit file
+* `:wq` → Write (save) and quit
+* `:wq!` → Force write and quit
+* `:q!` → Quit without saving
+
+### Searching
+
+* `:/<word>` → Search word from top
+* `:?<word>` → Search word from bottom
+* `:noh` → Remove search highlight
+
+### Deleting
+
+* `:27d` → Delete 27th line
+* `:%d` → Delete entire file content
+
+### Replace (Substitute)
+
+* `:3s/sbin/SBIN` → Replace first occurrence in 3rd line
+* `:3s/sbin/SBIN/g` → Replace all occurrences in 3rd line
+* `:%s/sbin/SBIN/g` → Replace all occurrences in file
+
+---
+
+## Command Mode (Esc Mode) Shortcuts
+
+* `u` → Undo
+* `yy` → Copy (yank) current line
+* `p` → Paste below cursor
+* `dd` → Cut (delete) current line
+* `gg` → Go to top of file
+* `Shift + g` → Go to bottom of file
+
+---
+
+## Linux Administration – User Management
+
+### CRUD Operations
+
+* **Create**
+* **Read**
+* **Update**
+* **Delete**
+
+### User Commands
+
+* `useradd <user-name>` → Create user
+* `id <user-name>` → Display user ID, group info
+* `passwd <user-name>` → Set or change password
+
+---
+
+## Group Management
+
+* Group = collection of similar users
+* Example: DevOps team with multiple members
+
+### Important Concepts
+
+* When a user is created, a **primary group** with the same name is created by default
+* Each user has:
+
+  * **1 primary group**
+  * **0 or more secondary groups**
+
+### Group Commands
+
+* `groupadd devops` → Create devops group
+
+### Add User to Groups
+
+* `usermod -g devops suresh` → Change primary group to devops
+* `usermod -aG testers suresh` → Add user to secondary group testers
+
+---
+
+## Best Practice Notes
+
+* Always use `-aG` while adding secondary groups (to avoid overwriting existing groups)
+* Prefer `vim` over `cat` for editing important configuration files
+* Avoid logging in as root directly; use sudo when required
+
+---
+
+*Suggested file names for repo:*
+
+* `vim-notes.md`
+* `linux-user-admin.md`
+* or merge into `README.md`
+-----------
+# Linux Permissions, SSH Keys & Service Management – Quick Notes
+
+---
+
+## Linux Permissions
+
+### Permission Values
+
+* **r (read)** → 4
+* **w (write)** → 2
+* **x (execute)** → 1
+
+### Permission Structure
+
+```
+-   rw-   r--   r--
+|    |     |     |
+|   user  group  others
+|
+file / directory
+```
+
+* **u** → user (owner)
+* **g** → group
+* **o** → others
+
+### Ownership
+
+```
+ec2-user  ec2-user
+ user       group
+```
+
+---
+
+## chmod – Change Permissions
+
+* `chmod ugo+w devops.txt` → Add write permission to user, group, others
+* `chmod 700 devops.txt` → Owner: full access, Group/Others: no access
+
+🔑 **Only owner or root user can change file permissions**
+
+---
+
+## chown – Change Ownership
+
+```
+chown <user>:<group> devops.txt
+```
+
+* File ownership can **only be modified by root user**
+
+---
+
+## SSH Configuration File
+
+* `/etc/ssh/sshd_config` → SSH daemon configuration
+
+---
+
+## Key-Based Authentication (SSH)
+
+### How to give key-based access to a Linux user
+
+1. **Create user**
+
+   ```
+   useradd arun
+   ```
+
+2. **User generates key pair**
+
+   ```
+   ssh-keygen -f arun
+   ```
+
+3. **User sends public key to admin**
+
+4. **Admin creates `.ssh` directory**
+
+   ```
+   mkdir /home/arun/.ssh
+   chown arun:arun /home/arun/.ssh
+   chmod 700 /home/arun/.ssh
+   ```
+
+5. **Create `authorized_keys` file**
+
+   ```
+   touch /home/arun/.ssh/authorized_keys
+   chmod 600 /home/arun/.ssh/authorized_keys
+   ```
+
+6. **Admin adds user public key to `authorized_keys`**
+
+7. **User can now login using key** ✅
+
+### Login using key
+
+```
+ssh -i <private-key> ec2-user@<IP>
+```
+
+---
+
+## Ports
+
+* Total ports: **65,536**
+* Range: **0 – 65,535**
+* Port example:
+
+  * Port is like a **flat number in an apartment**
+
+---
+
+## Sudo Access
+
+* `/etc/sudoers` → Configure sudo permissions
+* Better approach:
+
+  * Add user to **wheel group** (password or passwordless)
+
+---
+
+## Package Management
+
+* Package manager connects to repositories on the internet
+* Downloads and installs software
+
+### Common Package Managers
+
+* `apt-get` → Debian / Ubuntu
+* `yum` / `dnf` → RHEL / CentOS / Amazon Linux
+
+### Commands
+
+```
+dnf install <package-name>
+```
+
+* Repo files location:
+
+```
+/etc/yum.repos.d/
+```
+
+---
+
+## Service Management (systemd)
+
+```
+systemctl start <service-name>
+systemctl stop <service-name>
+systemctl status <service-name>
+systemctl restart <service-name>
+systemctl enable <service-name>
+systemctl disable <service-name>
+```
+
+### Example – Install & Start Nginx
+
+```
+dnf install nginx -y
+systemctl start nginx
+systemctl enable nginx
+```
+
+---
+
+## Networking Basics
+
+Login requires:
+
+* Protocol
+* Port
+* IP address
+* Username
+* Password / Key
+
+Example:
+
+```
+Protocol : HTTP
+Port     : 80
+IP       : <IP-address>
+```
+
+---
+
+*Suggested repo file names:*
+
+* `linux-permissions.md`
+* `ssh-key-auth.md`
+* `service-management.md`
+* or merge into
+
+-------------------
+
+# Linux Process & Network Management + Architecture Concepts
+
+---
+
+## Process Management
+
+### Real-life Analogy (Hierarchy)
+
+```
+TM → TL → Senior → Junior → Fresher
+```
+
+* TM assigns tasks to TLs
+* TL distributes work further
+* Same hierarchy applies to **parent and child processes** in Linux
+
+---
+
+## How a Command Works Internally
+
+Example:
+
+```
+ls -l
+```
+
+Flow:
+
+1. Command is executed by user
+2. A **process is created**
+3. Kernel assigns a **PID (Process ID)**
+4. Command is executed in kernel
+5. Output is returned
+6. Result is displayed on screen
+
+---
+
+## ps Command
+
+```
+ps
+```
+
+Sample output fields:
+
+```
+UID   PID   PPID   C   STIME   TTY   TIME   CMD
+```
+
+### Important Columns
+
+* **PID** → Process ID
+* **PPID** → Parent Process ID
+
+---
+
+## List Processes
+
+```
+ps -ef
+ps -ef | grep <process-name>
+```
+
+---
+
+## Foreground & Background Processes
+
+* Foreground → Runs in terminal
+* Background → Runs behind terminal
+
+```
+command &
+```
+
+---
+
+## Kill a Process
+
+```
+kill <PID>        → Graceful termination (SIGTERM)
+kill -9 <PID>     → Force kill (SIGKILL)
+```
+
+---
+
+## Service & Process Relation
+
+```
+systemctl status nginx
+ps -ef | grep nginx
+```
+
+* Application runs as a **process**
+* Each process has a **PID**
+
+---
+
+## Resource Usage
+
+Example:
+
+* 10 users → ~0.1% CPU, ~0.1% RAM
+* 2000 users → ~10% CPU, ~20% RAM
+
+Check resource usage of a specific process:
+
+```
+top -p <PID>
+```
+
+---
+
+## Network Management
+
+### Check Open Ports in Linux
+
+```
+netstat -lntp
+```
+
+Common workflow:
+
+```
+systemctl status <service>
+ps -ef | grep <service>
+netstat -lntp
+top -p <PID>
+```
+
+---
+
+## 3-Tier Architecture
+
+### Desktop Application Problems
+
+* High resource usage
+* Application hang issues
+* Manual installation & upgrades
+* Storage limitations
+* Compatibility issues
+* No proper data security or backup
+* Cannot access from anywhere
+
+👉 Hence, **architecture is important**
+
+---
+
+## Real-Life Architecture Examples
+
+### Roadside Breakfast Shop
+
+* Single person handles:
+
+  * Order
+  * Cooking
+  * Serving
+  * Payment
+* Works only for < 10 customers
+
+---
+
+### Small Hotel
+
+* Cook → prepares items
+* Owner → handles counter & tokens
+* Around 20–100 members
+
+---
+
+### Restaurant (3-Tier Model)
+
+* Captain → welcomes customers
+* Waiter → takes orders
+* Chef → prepares food
+* Waiter → garnishing & serving
+
+Benefits:
+
+1. Security
+2. Queue management (better taste & efficiency)
+
+---
+
+## Database Example
+
+```
+SELECT * FROM users
+WHERE username = 'arun@devops.com'
+AND password = 'arun123';
+```
+
+---
+
+## Common Tools Used
+
+* Visual Studio Code
+* PuTTY
+* Terraform
+* AWS CLI v2
+
+---
+
+*Suggested repo file names:*
+
+* `process-management.md`
+* `network-management.md`
+* `architecture-basics.md`
+* or merge into `README.md`
+-------------------------
+
+# DevOps Practice Notes
+
+## AMI (Amazon Machine Image)
+
+AMI is a pre-configured image used to launch EC2 instances.
+
+Contains:
+- Base OS (RedHat 9)
+- Nginx
+- Applications
+- Required packages
+
+Easy understanding:
+- Image → us and our surroundings
+- AMI → OS + software + configuration
+
+Example:
+AMI = RedHat 9 + Nginx + Applications + Packages
+
+---
+
+## EC2 Access (Example)
+
+AMI Name: devops-practice  
+User: ec2-user  
+Authentication: Password based (example only)
+
+NOTE: Do not store real passwords in public repositories.
+
+---
+
+## Public IP vs Private IP
+
+Private IP:
+192.168.1.102
+
+Public IP:
+103.149.59.114
+
+---
+
+## Linux & Nginx
+
+Linux is the physical server / OS.  
+Nginx is a virtual web server running on Linux.
+
+Install Nginx:
+yum install nginx -y  
+dnf install nginx -y  
+apt-get install nginx -y  
+
+dnf is the advanced version of yum and supports modules.
+
+---
+
+## Nginx Configuration
+
+Configuration file:
+/etc/nginx/nginx.conf
+
+Web root:
+/usr/share/nginx/html
+
+Default page:
+index.html
+
+Restart nginx after configuration changes.
+
+---
+
+## Accessing Nginx
+
+Example URL:
+http://44.201.38.173:80
+
+---
+
+## Domain Registrars
+
+GoDaddy – around 1000 per year  
+Hostinger – cheap first year, costly renewals
+
+---
+
+## Key and Value
+
+Word → Meaning  
+Key → Value  
+
+Computers understand only 0 and 1.  
+Binary values are converted to decimal for readability.
+
+---
+
+## DNS (Domain Name System)
+
+Example:
+facebook.com → 143.234.53.98
+
+DNS Resolver:
+- Component in ISP
+- Resolves domain names to IP addresses
+- Contacts root servers
+
+---
+
+## TLD (Top Level Domains)
+
+.com  
+.in  
+.io  
+.org  
+.net  
+.edu  
+.gov  
+.co  
+.ai  
+.shop  
+.pizza  
+.space  
+.online  
+
+Custom TLDs like .siva can be registered.
+
+---
+
+## DNS Records
+
+A – IP address  
+CNAME – Points to another domain  
+MX – Mail records  
+TXT – Domain verification  
+NS – Nameserver details  
+
+---
+
+## Nameservers
+
+Nameservers define who manages the domain.  
+Registrar updates domain details to TLD servers.
+
+---
+
+## TTL (Time To Live)
+
+TTL defines how long DNS records are cached.
+---------------------------
+
+# DevOps Practice Notes – Part 2
+
+## DNS Resolution Flow
+
+google.com →
+Browser Cache →
+OS →
+OS Cache →
+ISP DNS Resolver →
+Root Servers →
+TLD Information →
+.com TLD →
+Authoritative Name Servers →
+A Record
+
+---
+
+## Nameservers & Registrar
+
+- Nameservers define **who is managing the domain currently**
+- Domain Registrar is a **mediator** that sells domains
+- Registrars provide **default nameservers**
+
+### AWS Route53 Flow
+1. Create Hosted Zone in AWS
+2. Get NS records
+3. Update NS records in domain provider
+4. DNS starts resolving via Route53
+
+---
+
+## TTL (Time To Live)
+
+- TTL defines how long DNS data is cached
+- DNS cache is used until TTL expires
+- After TTL expiry, a fresh DNS request is issued
+
+---
+
+## DNS Record Types
+
+- A     → IPv4 address
+- AAAA  → IPv6 address
+- CNAME → Points to another domain
+- MX    → Mail records
+- TXT   → Domain verification
+- NS    → Nameservers
+
+---
+
+## AWS Free Tier Calculation
+
+750 hours per month for:
+- t2.micro
+- t3.micro
+
+Assuming 31 days:
+
+- 1 instance  → 1 month
+- 2 instances → 15 days
+- 11 instances → ~3 days
+
+---
+
+## Tools
+
+- MobaXterm → SSH client for Windows
+
+---
+
+## Linux Prompt
+
+Set frontend prompt:
+```bash
+sudo set-prompt frontend
+
+-------------------------# DevOps Fundamentals – Complete Notes
+
+## DNS Resolution Flow
+
+google.com  
+→ Browser Cache  
+→ OS Cache  
+→ ISP DNS Resolver  
+→ Root DNS Servers  
+→ TLD Servers (.com)  
+→ Authoritative Name Servers  
+→ A / AAAA Record (IP Address)
+
+### DNS Concepts
+- Name Servers: Tell who is managing the domain
+- Domain Registrar: Mediator that sells the domain  
+  (has default name servers)
+- Hosted Zone (AWS Route53):
+  - Create hosted zone
+  - Get NS records
+  - Update NS records at domain provider
+- TTL (Time To Live):
+  - Time DNS records stay cached before next DNS request
+
+---
+
+## DNS Record Types
+
+A     → IPv4 address  
+AAAA  → IPv6 address  
+CNAME → Points to another domain  
+MX    → Mail server records  
+TXT   → Domain verification (SPF, DKIM, etc.)  
+NS    → Name servers  
+
+---
+
+## AWS Free Tier – EC2 Usage
+
+- Free tier: 750 hours per month
+- Instance types: t2.micro or t3.micro
+- 31 days ≈ 744 hours
+
+Examples:
+- 1 instance  → 1 month  
+- 2 instances → ~15 days  
+- 11 instances → ~3 days  
+
+---
+
+## Linux & Server Basics
+
+127.0.0.1 = localhost  
+
+MobaXterm:
+- SSH client for Windows
+
+Command:
+sudo set-prompt frontend
+
+---
+
+## Linux Users
+
+### System / Service Users
+- Non-human users
+- No login access
+- Intended to run applications
+
+Example entry:
+nginx:x:991:990:Nginx web server:/var/lib/nginx:/sbin/nologin
+
+Encrypted passwords stored in:
+/etc/shadow
+
+### Create System User
+
+useradd --system \
+--home /app \
+--shell /sbin/nologin \
+--comment "roboshop system user" roboshop
+
+---
+
+## Application Directory
+
+/app → Application code directory  
+/app can be home directory for system user
+
+Application setup flow:
+1. Install programming language
+2. Create directory
+3. Create system user
+4. Download application code
+5. Install dependencies
+
+---
+
+## Package Management (RHEL/CentOS)
+
+dnf install nginx  
+dnf install mongodb-org  
+
+dnf install catalogue → NOT available (custom application)
+
+---
+
+## Databases
+
+### RDBMS (Structured Databases)
+- MySQL
+- Oracle
+- PostgreSQL
+- MSSQL
+- Tables, columns, primary keys, foreign keys
+
+### NoSQL
+- MongoDB
+- Document based database
+
+Example document:
+{
+  "name": "arun",
+  "email": "info@devops.com"
+}
+
+---
+
+## Programming Languages
+
+JavaScript → .js  
+Java       → .java  
+Python     → .py  
+Go         → .go  
+
+---
+
+## Build Tools & Dependencies
+
+- Every programming language has dependencies/libraries
+- Build tool responsibilities:
+  - Compile / syntax check
+  - Download dependencies
+  - Prepare application to run
+
+### NodeJS
+- Package Manager: npm
+- Build file: package.json
+
+npm install  
+→ Looks for package.json in the current directory
+
+---
+
+## Systemd Services
+
+Used for:
+- start
+- stop
+- restart
+- enable / disable
+
+Service file location:
+/etc/systemd/system/
+
+Example service file:
+catalogue.service
+
+---
+
+## Typical Application Deployment Flow
+
+1. Install OS packages
+2. Install language runtime
+3. Create system user
+4. Create /app directory
+5. Download application code
+6. Install dependencies
+7. Create systemd service
+8. Start and enable service
+
+-------------------------------
+
+# MySQL, Proxy, HTTP & Server Configuration Notes
+
+## MySQL
+
+MySQL is an RDBMS (Relational Database Management System)  
+Data is stored in tables and columns
+
+Linux Server → MySQL Server
+
+### MySQL Architecture (Analogy)
+
+House → Linux Server  
+Room → Database Server  
+Rack → Schema  
+Items → Tables  
+
+- One DB server can have one or many databases
+- Supports transactions, users, permissions
+
+---
+
+## MySQL Connectivity Test
+
+telnet mysql.daws84s.site 3306
+
+Purpose:
+- Check whether MySQL is running
+- Check whether port 3306 is open
+- Check whether MySQL is accepting connections
+
+If connected but issues exist:
+- User / password problem
+- Query / permission problem
+
+---
+
+## Nginx Configuration
+
+Main configuration file:
+/etc/nginx/nginx.conf
+
+Nginx can act as:
+- Web server
+- Reverse proxy
+- Load balancer
+
+---
+
+## Client and Server
+
+- Server → Prime server
+- Client → VPN / Mobile / Browser
+
+---
+
+## Forward Proxy
+
+Client identity is hidden from server
+
+Flow:
+Actual Client → Forward Proxy → Server
+
+Use cases:
+1. Content filtering
+2. Traffic monitoring
+3. Anonymous client access
+4. Geo-restriction bypass
+5. Caching
+
+---
+
+## Reverse Proxy
+
+Client is not aware of backend server identity
+
+Flow:
+Client → Reverse Proxy → Backend Server
+
+Benefits:
+1. Security
+2. Load balancing
+3. SSL termination
+4. Backend abstraction
+
+Nginx is commonly used as a reverse proxy
+
+---
+
+## Frontend and Backend
+
+Frontend communicates with backend APIs
+
+Backend connectivity test:
+telnet backend.daws84s.site 8080
+
+Backend troubleshooting:
+- Login to backend server
+- Check service status:
+  systemctl status backend
+- Check logs:
+  /var/log
+
+Example API:
+http://aws.site/api/transaction
+
+---
+
+## HTTP Status Codes
+
+1XX → Informational  
+2XX → Success  
+3XX → Redirection  
+
+Errors:
+4XX → Client-side error  
+5XX → Server-side error  
+
+---
+
+## CRUD Operations
+
+INSERT  
+SELECT  
+UPDATE  
+DELETE  
+
+---
+
+## Common Application Features
+
+- Reports: daily, weekly, monthly, quarterly
+- Bank records
+- Users
+- Notifications
+- AI / ML
+- SaaS applications
+
+---
+
+## Server Configuration Flow
+
+1. Create Linux server
+2. Install programming language (includes build tool)
+3. Create application directory: /app
+4. Create system user for application (roboshop)
+5. Download application code into /app
+6. Install dependencies
+7. Create systemd service
+8. Load data (if required)
+9. Start and enable service
+
+---
+
+## MySQL Issue Scenarios
+
+telnet mysql.daws84s.site 3306
+
+- Connected:
+  - User / password issue
+  - Query / permission issue
+- Not connected:
+  - MySQL not running
+  - Firewall issue
+  - Port 3306 not open
+---------------------------------------------
+
+# Frontend, Backend, Logs, Memory & Data Flow Notes
+
+## Frontend → Backend API Calls
+
+Frontend calls backend catalogue APIs
+
+Base API:
+http://aws.site/api/catalogue
+
+### Get Categories
+http://aws.site/api/catalogue/categories
+
+### Get Products by Category
+http://aws.site/api/catalogue/products/Artificial%20Intelligence
+
+---
+
+## Sample API Response (JSON)
+
+[
+  {
+    "_id": "681d63fc59c47e0558c59f36",
+    "sku": "Ewooid",
+    "name": "Ewooid",
+    "description": "Fully sentient assistant",
+    "price": 200,
+    "instock": 0,
+    "categories": [
+      "Artificial Intelligence"
+    ]
+  },
+  {
+    "_id": "681d63fc59c47e0558c59f3e",
+    "sku": "STAN-1",
+    "name": "Stan",
+    "description": "Observability guru",
+    "price": 67,
+    "instock": 1000,
+    "categories": [
+      "Robot",
+      "Artificial Intelligence"
+    ]
+  },
+  {
+    "_id": "681d63fc59c47e0558c59f35",
+    "sku": "Watson",
+    "name": "Watson",
+    "description": "Probably the smartest AI on the planet",
+    "price": 2001,
+    "instock": 2,
+    "categories": [
+      "Artificial Intelligence"
+    ]
+  }
+]
+
+---
+
+## Log Files (Linux)
+
+Nginx access logs:
+/var/log/nginx/access.log
+
+System logs:
+/var/log/messages
+
+Used for:
+- Request tracking
+- Debugging issues
+- Error investigation
+
+---
+
+## Memory & Storage Flow
+
+Hard Disk (ROM) → RAM → Applications
+
+- Applications load into RAM
+- RAM is faster than disk
+- Disk is persistent storage
+
+---
+
+## Application → Database Flow
+
+1. Application sends connection request to DB
+2. Connection is established
+3. Application runs query
+4. Database fetches data from disk
+5. Database sends response to application
+6. Connection is closed
+
+Flow:
+App → DB → App
+
+---
+
+## Application → Cache → Database Flow
+
+Optimized data access flow:
+
+App → Cache  
+If data exists → return response  
+If not exists →  
+App → DB → Cache → App  
+
+Benefits:
+- Faster response time
+- Reduced DB load
+- Improved application performance
+----------------------------------
+# Microservices, HTTP, CRUD & Build Tools Notes
+
+## Microservices & Databases Mapping
+
+MongoDB:
+- catalogue
+- frontend
+
+Redis:
+- user
+- cart
+
+MySQL:
+- shipping
+
+RabbitMQ:
+- payment
+- dispatch
+
+---
+
+## HTTP Status Codes
+
+1XX → Informational  
+2XX → Success  
+3XX → Redirectional  
+4XX → Client-side errors  
+5XX → Server-side errors  
+
+---
+
+## HTTP Methods
+
+- GET
+- POST
+- PUT
+- DELETE
+- OPTIONS
+
+---
+
+## Nouns and Verbs in REST APIs
+
+- Nouns → Resources
+- Verbs → HTTP methods
+
+Example:
+- User → Noun
+- Create User → Verb
+
+CRUD Operations:
+- Create
+- Read
+- Update
+- Delete
+
+---
+
+## REST API Examples (User)
+
+GET (Read User):
+http://aws.site/user
+
+POST (Create User):
+http://aws.site/user
+
+PUT (Update User):
+http://aws.site/user
+
+DELETE (Delete User):
+http://aws.site/user
+
+---
+
+## REST API Examples (Orders)
+
+Create Order:
+POST http://aws.site/order
+
+Get All Orders:
+GET http://aws.site/orders
+
+Get Order by ID:
+GET http://aws.site/orders/O654S5HG
+
+---
+
+## Catalogue API Routing
+
+Original API:
+http://aws.site/api/catalogue/categories  
+http://aws.site/api/catalogue/products/Artificial%20Intelligence  
+
+Mapped via DNS / Reverse Proxy:
+http://catalogue.daws84s.site/categories  
+
+Local Testing:
+http://localhost:8080/products/Artificial%20Intelligence  
+
+Get Product by Name:
+http://aws.site/api/catalogue/product/Ewooid  
+http://localhost:8080/product/Ewooid  
+
+---
+
+## Backend Application Behavior
+
+- Backend applications always perform CRUD operations on DB
+- APIs act as interface between frontend and database
+
+---
+
+## Logs Location (Linux)
+
+Nginx access logs:
+/var/log/nginx/access.log
+
+System logs:
+/var/log/messages
+
+Used for:
+- Debugging
+- Request tracing
+- Error investigation
+
+---
+
+## Java Basics
+
+File extension:
+.java
+
+Java Flow:
+Java source code → Compile → Bytecode → Run bytecode
+
+Bytecode extension:
+.class
+
+---
+
+## Maven (Java Build Tool)
+
+Build tool for Java: Maven  
+Build file: pom.xml
+
+pom.xml contains:
+- groupId
+- artifactId
+- version
+
+Example:
+groupId    → com.hdfc  
+artifactId → banking.savings.smsbanking  
+version    → 1.0.0  
+
+---
+
+## Maven Commands
+
+Compile source code:
+mvn compile
+→ Generates .class files in target folder
+
+Package application:
+mvn package
+→ Creates single JAR file (shipping-<version>.jar)
+
+Clean and package:
+mvn clean package
+→ Removes old builds and creates fresh package
+
+Maven lifecycle:
+clean → compile → test → package
+
+---
+
+## Java Packaging
+
+.java  → Source code  
+.class → Bytecode  
+.jar   → Packaged bytecode file  
+
+---
+
+## Database Architecture (Analogy)
+
+Room   → Database Server  
+Racks  → Schema  
+Tables → Data storage  
+
+---
+
+## NodeJS
+
+Programming language: NodeJS  
+Package manager: npm  
+
+---
+
+## Python
+
+File extension:
+.py
+
+Build tool:
+pip
+
+Build file:
+requirements.txt
+
+---
+
+## Generic Application Setup Steps
+
+1. Install programming language
+2. Create application directory
+3. Download application code
+4. Install dependencies using build tool
+-------------------------------------
+
+# MQ (Message Queue) & Asynchronous Communication Notes
+
+## Synchronous vs Asynchronous Communication
+
+### Synchronous (Sync)
+
+- Client sends a request and waits for response
+- If response is delayed or not received → error
+- HTTP is synchronous by nature
+
+Example:
+http://aws.site  
+
+Flow:
+Request sent → waits for response (e.g., 1 minute)  
+If no response → timeout / error  
+
+Use case:
+- Immediate response required
+- Simple request–response systems
+
+---
+
+### Asynchronous (Async) – Fire and Forget
+
+- Client sends a request
+- Does NOT wait for immediate response
+- Processing happens in background
+
+Flow:
+Request sent → message queued → processed later  
+
+Use case:
+- Long-running tasks
+- High traffic systems
+- Loose coupling between services
+
+---
+
+## Message Queue (MQ)
+
+Message Queue enables **asynchronous communication** between systems.
+
+Producer → MQ → Consumer
+
+- Producer sends message
+- MQ stores message
+- Consumer processes message independently
+
+---
+
+## Messaging Models
+
+### 1. Point-to-Point (Queue)
+
+- Message delivered to **only one consumer**
+- Used when exactly one system should process the message
+
+Example:
+Order service → Shipping service
+
+---
+
+### 2. Publish / Subscribe (Topic)
+
+- Message delivered to **all subscribers**
+- Used when multiple systems must receive the same message
+
+Example:
+When you upload a video → all subscribers get notification
+
+---
+
+## MQ Tools / Technologies
+
+- ActiveMQ
+- RabbitMQ
+- IBM MQ
+- Kafka
+
+---
+
+## Real-Time Example (RobotShop)
+
+- RobotShop application
+- External delivery vendor handles shipping
+- Delivery partner sends thousands of messages (order updates)
+
+Flow:
+Delivery Partner → MQ → RobotShop Services  
+
+Benefits:
+- Can handle thousands of messages
+- No direct dependency between systems
+- High reliability and scalability
+
+---
+
+## Why Use MQ?
+
+- Decouples services
+- Improves scalability
+- Handles traffic spikes
+- Prevents system overload
+- Enables async processing
+------------------------------------------
+# Payment Service, Linux Links, Filesystem & Troubleshooting Notes
+
+## Payment Service – Python
+
+- Payment service is written in Python
+- File extension: .py
+- Build / package tool: pip
+- Dependency file: requirements.txt
+
+---
+
+## Files, Inodes & Links
+
+### Inode
+- Inode is the metadata of a file
+- Stores:
+  - File permissions
+  - Ownership
+  - File size
+  - Timestamps
+  - Actual disk (memory) location
+- File name is NOT stored in inode
+
+---
+
+## Symbolic Link (Symlink / Softlink)
+
+- Acts like a shortcut pointing to the original file
+- Has a DIFFERENT inode than the original file
+- If original file is deleted → symlink breaks
+- Can point to:
+  - Files
+  - Directories
+  - Different disks
+- Commonly used to point to different versions
+
+Create symlink:
+ln -s <original-file> <symlink-file>
+
+Example:
+ln -s /etc/nginx/nginx.conf /etc/nginx-1.conf
+ln -s /etc/nginx/nginx.conf /etc/nginx-2.conf
+
+---
+
+## Hard Link
+
+- Acts like a copy but shares SAME inode as original
+- If original file is deleted → hard link still works
+- Used like a backup
+- Cannot be created for directories
+- Cannot span across different disks
+
+Difference summary:
+- Symlink → different inode, breaks if original deleted
+- Hardlink → same inode, works even if original deleted
+
+---
+
+## Find & Edit Files
+
+Find files:
+find / -name "*.conf"
+
+Edit files:
+vim /usr/share/nginx/html/
+vim /etc/yum.repos.d/
+
+---
+
+## Networking & Connectivity Commands
+
+Check listening ports and services:
+netstat -lntp
+
+Check DNS resolution:
+nslookup <domain-name>
+
+Check DB or service connectivity:
+telnet <hostname> <port>
+
+Example:
+telnet mysql.daws84s.site 3306
+
+---
+
+## Logs & Monitoring
+
+View system logs:
+less /var/log/messages
+
+Nginx access logs:
+/var/log/nginx/access.log
+
+---
+
+## Inode Related Commands
+
+List files with inode number:
+ls -il
+
+Check inode details:
+stat <file-name>
+
+Check number of hard links:
+ls -il <file-name>
+
+Find files attached to an inode:
+find / -inum <inode-number>
+
+---
+
+## Process Monitoring
+
+List all processes:
+ps aux
+
+Top memory consuming processes:
+ps aux --sort=-%mem | head -n 5
+
+Lowest memory consuming processes:
+ps aux --sort=%mem | head -n 5
+
+---
+
+## Disk & Memory Usage
+
+Memory:
+- RAM → main memory
+- Swap → virtual memory from disk
+
+Disk usage by filesystem:
+df -hT
+
+Folder size:
+du -sh <folder-path>
+
+All folder sizes:
+du -sh *
+
+Top 20 largest files/folders:
+du -ah / | sort -rh | head -n 20
+
+---
+
+## Package Management
+
+Install nginx:
+dnf install nginx -y
+
+Binary mapping:
+dnf-4 → /usr/bin/dnf
+
+---
+
+## Important Directories
+
+/app            → Application directory  
+/opt/app        → Optional application directory  
+
+/usr/share/nginx/html → Nginx web root  
+/usr/bin        → User binaries  
+/usr/sbin       → System binaries  
+/usr/local/bin  → Locally installed binaries  
+
+/proc → Virtual filesystem created by kernel  
+- Contains running process information
+
+---
+
+## Memory & Storage Flow
+
+Hard Disk → RAM → Programs
+
+- Disk is persistent storage
+- RAM is fast but volatile
+- Swap uses disk as virtual RAM
+
+---
+
+## Key Differences Summary
+
+- Symlink:
+  - Different inode
+  - Can link directories
+  - Works across disks
+  - Breaks if original deleted
+
+- Hardlink:
+  - Same inode
+  - File only
+  - Same disk only
+  - Works even if original deleted
+
 
