@@ -726,14 +726,6 @@ Benefits:
 
 ---
 
-## Database Example
-
-```
-SELECT * FROM users
-WHERE username = 'arun@devops.com'
-AND password = 'arun123';
-```
-
 ---
 
 ## Common Tools Used
